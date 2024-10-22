@@ -1,0 +1,31 @@
+body {
+    font-size: Arial, sans-serif;
+}
+
+
+
+.form-input {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+
+}
+
+.password {
+    width: 100%;
+    position: relative;
+}
+.password input {
+    width: 100%;
+}
+
+.password i {
+    position: absolute;
+    right: 4px;
+    top: 2px;
+
+}
+
+/* i {
+    position: absolute;
+} */
