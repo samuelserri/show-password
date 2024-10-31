@@ -35,6 +35,7 @@ $integrantes = [
 
 ];
 
+
 ?>
 
 
@@ -51,50 +52,17 @@ $integrantes = [
     <h1>Integrantes da Turma 146</h1>
 
     <table>
-        <tr>
-          <th>Nome</th>
-          <th>Email</th>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[0]["nome"]?></td>
-          <td><?php echo $integrantes[0]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[1]["nome"]?></td>
-          <td><?php echo $integrantes[1]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[2]["nome"]?></td>
-          <td><?php echo $integrantes[2]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[3]["nome"]?></td>
-          <td><?php echo $integrantes[3]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[4]["nome"]?></td>
-          <td><?php echo $integrantes[4]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[5]["nome"]?></td>
-          <td><?php echo $integrantes[5]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[6]["nome"]?></td>
-          <td><?php echo $integrantes[6]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[7]["nome"]?></td>
-          <td><?php echo $integrantes[7]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[8]["nome"]?></td>
-          <td><?php echo $integrantes[8]["email"]?></td>
-        </tr>
-        <tr>
-          <td><?php echo $integrantes[9]["nome"]?></td>
-          <td><?php echo $integrantes[9]["email"]?></td>
-        </tr>
+    <table>
+    <?php foreach ($integrantes as $integrante) { ?>
+    <tr>
+          <td><?php echo $integrante["nome"]?></td>
+          <td><?php echo $integrante["email"]?></td>
+    
+    </tr>
+    <?php } ?>
+
+
+
     </table>
 
 
