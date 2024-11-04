@@ -1,8 +1,6 @@
 <?php
 
-
 require "Database.php";
-
 
 $database = new Database(
     "localhost",
@@ -12,20 +10,14 @@ $database = new Database(
     "filmesdb"
 );
 
+// estabelece conexão com banco
+$conn = $database->createConnection();
 
-var_dump($database);
-
-$conn = $database->__createConnection();
-
-var_dump($conn);
-
+// prepara a consulta
 $stmt = $conn->prepare("SELECT * FROM filme");
 
+// executa a consulta
 $stmt->execute();
-
-// foreach ($stmt as $row) {
-//     print_r($row);
-// }
 ?>
 
 <!DOCTYPE html>
@@ -33,21 +25,22 @@ $stmt->execute();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Filmes</title>
 </head>
 <body>
-    <table>
+    <table border="1">
         <tbody>
-            <?php foreach ($stmt as $row) {?>
-            <tr>
-                <td><?php echo $row["id"]?></td>
-                <td><?php echo $row["titulo"]?></td>
-                <td><?php echo $row["ano"]?></td>
-                <td><?php echo $row["descricao"]?></td>
-            </tr>
+            <!-- percorre a lista de resultados -->
+            <?php while ($row = $stmt->fetch()) { ?>
+                <tr>
+                    <!-- escreve na tabela cada item retornado -->
+                    <td><?php echo $row["id"] ?></td>
+                    <td><?php echo $row["titulo"] ?></td>
+                    <td><?php echo $row["ano"] ?></td>
+                    <td><?php echo $row["descricao"] ?></td>
+                </tr>
             <?php } ?>
         </tbody>
     </table>
-    
 </body>
 </html>
