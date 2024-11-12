@@ -1,10 +1,32 @@
 # Banco de dados
 
+## Aula 1
+
+Criação do banco de dados, tabela filme e classe Model para lidar com a tabela filme no PHP.
+
 Filme
  id
  nome
  ano
  descricao
+
+## Aula 2
+
+Criado 2 métodos de consulta no Filme model e criação da listagem de filmes.
+
+## Aula 3
+
+Organizando a estrura do projeto.
+Criação da funcionalidade de ver detalhes do filme.
+
+Fazer a listagem e visualização do usuário.
+
+
+
+
+---
+
+Exercicios
 
 - Instruções para inserir ao menos 20 registros
 - Instrução para retornar todos os registros
@@ -20,3 +42,5 @@ Usuario
 Favorito
  usuario_id
  filme_id
+
+

@@ -1,16 +1,13 @@
-<?php 
+<?php
 
-require __DIR__ . "\..\model\Filme.php";
-require __DIR__ . "\..\config\Database.php";
+require __DIR__ . "\..\..\Config\Database.php";
+require __DIR__ . "\..\..\Model\Filme.php";
+
+$filmeModel = new Filme($conn);
 
 $id = $_GET["id"];
 
-$filmeModel = new Filme($conn);
 $filme = $filmeModel->findById($id);
-
-$filmeModel = new Filme($id);
-
-//print_r($filmes);
 
 ?>
 
@@ -24,7 +21,7 @@ $filmeModel = new Filme($id);
 <body>
     <h1>Filme</h1>
 
-    <h3>Título: <?php echo $filme->titulo ?></h3>
+    <h3>Titulo: <?php echo $filme->titulo ?></h3>
     <p>Ano: <?php echo $filme->ano ?></p>
     <p>Descrição: <?php echo $filme->descricao ?></p>
 </body>

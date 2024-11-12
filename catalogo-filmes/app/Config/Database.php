@@ -23,7 +23,8 @@ class Database {
     // responsável por criar a conexão com o DB
     public function createConnection() {
         $connUrl = "mysql:host=$this->host;
-                    port=$this->port;dbname=$this->db;
+                    port=$this->port;
+                    dbname=$this->db;
                     charset=utf8mb4;";
 
         $this->conn = new PDO($connUrl, 
@@ -35,7 +36,7 @@ class Database {
 
 }
 
-
+// estabelece conexão com banco
 $database = new Database(
     "localhost",
     3306,
@@ -43,6 +44,4 @@ $database = new Database(
     "",
     "filmesdb"
 );
-
-// estabelece conexão com banco
 $conn = $database->createConnection();
