@@ -1,49 +1,13 @@
 <?php
-
-// Inicia a sessão para exibir mensagens de sucesso ou erro
 session_start();
-
-// Conexão com o banco de dados e inclusão do modelo de Filme
 require __DIR__ . "\..\..\Config\Database.php";
 require __DIR__ . "\..\..\Model\Filme.php";
 
-// Instancia o modelo de Filme
+// Conexão com o banco de dados e instância do modelo
 $filmeModel = new Filme($conn);
 
-// Verifica se foi enviado um pedido de exclusão
-if (isset($_POST['excluir_id'])) {
-    $id = $_POST['excluir_id'];
-
-    // Verifica se o ID é válido
-    if (!is_numeric($id)) {
-        echo "ID inválido!";
-        exit;
-    }
-
-    // Tenta excluir o filme
-    try {
-        // Prepara a consulta para excluir o filme
-        $stmt = $conn->prepare("DELETE FROM filme WHERE id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
-        // Executa a exclusão
-        $stmt->execute();
-
-        // Verifica se o filme foi excluído
-        if ($stmt->rowCount() > 0) {
-            $_SESSION['msg'] = 'Filme excluído com sucesso!';
-        } else {
-            $_SESSION['msg'] = 'Nenhum filme encontrado com o ID fornecido.';
-        }
-
-    } catch (Exception $e) {
-        $_SESSION['msg'] = 'Erro ao excluir filme: ' . $e->getMessage();
-    }
-}
-
-// Busca todos os filmes
+// Busca todos os filmes do banco de dados
 $filmes = $filmeModel->findAll();
-
 ?>
 
 <!DOCTYPE html>
@@ -52,9 +16,8 @@ $filmes = $filmeModel->findAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Filmes</title>
-
     <style>
-        /* Reset básico */
+        /* Resetando margens e padding */
         * {
             margin: 0;
             padding: 0;
@@ -63,94 +26,130 @@ $filmes = $filmeModel->findAll();
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            padding: 20px;
+            background-color: #141414; /* Fundo escuro */
+            color: #fff;
+            padding: 0;
         }
 
         h1 {
+            font-size: 2.5rem;
             text-align: center;
-            font-size: 2.5em;
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        .message {
-            padding: 10px;
-            background-color: #e0f7fa;
-            color: #00796b;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border: 1px solid #00796b;
-            font-size: 1.1em;
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-radius: 5px;
-        }
-
-        th {
-            background-color: #3498db;
             color: white;
-            font-size: 1.1em;
+            margin-top: 20px;
         }
 
-        td {
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            font-size: 1em;
+        /* Estilo da mensagem de sucesso/erro */
+        .message {
+            padding: 15px;
+            background-color: #333;
+            color: #e74c3c;
+            border-radius: 5px;
+            margin: 20px auto;
+            text-align: center;
+            font-size: 1.2em;
         }
 
-        /* Efeito hover nas linhas da tabela */
-        tr:hover {
-            background-color: #f1f1f1;
+        .message.success {
+            background-color: #2ecc71;
+            color: #fff;
         }
 
-        button {
-            padding: 8px 15px;
+        .message.error {
             background-color: #e74c3c;
+            color: #fff;
+        }
+
+        /* Contêiner de filmes (grid de filmes) */
+        .movies-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            justify-items: center;
+        }
+
+        /* Estilo de cada item de filme */
+        .movie-card {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            width: 200px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-card img {
+            width: 100%;
+            border-radius: 10px;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .movie-card h3 {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .movie-card p {
+            font-size: 0.9rem;
+            color: #bbb;
+            margin-bottom: 10px;
+        }
+
+        .movie-card .year {
+            font-size: 1rem;
+            color: #777;
+        }
+
+        /* Botões */
+        .button {
+            padding: 10px 20px;
+            background-color: #e50914;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1rem;
+            margin-top: 10px;
+            display: inline-block;
+            transition: background-color 0.3s;
         }
 
-        button:hover {
-            background-color: #c0392b;
-            transform: translateY(-2px);
+        .button:hover {
+            background-color: #f40612;
         }
 
-        button:active {
-            transform: translateY(0);
+        .button:focus {
+            outline: none;
         }
 
-        /* Caixa de mensagens */
-        .alert {
-            padding: 10px;
-            background-color: #dff0d8;
-            color: #3c763d;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #d6e9c6;
+        /* Estilo do botão de cadastrar novo filme */
+        .add-movie-btn {
+            margin-top: 20px;
             text-align: center;
         }
 
-        /* Alinhamento do formulário */
-        form {
-            display: inline-block;
+        .add-movie-btn a {
+            text-decoration: none;
         }
 
-        /* Estilo para o modal */
+        .add-movie-btn button {
+            background-color: #2ecc71;
+            font-size: 1.1rem;
+            padding: 12px 25px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .add-movie-btn button:hover {
+            background-color: #27ae60;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -160,23 +159,24 @@ $filmes = $filmeModel->findAll();
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.8);
             padding-top: 60px;
             text-align: center;
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: #222;
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
             max-width: 600px;
             border-radius: 10px;
+            color: #fff;
         }
 
         .close {
-            color: #aaa;
+            color: #bbb;
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -185,24 +185,10 @@ $filmes = $filmeModel->findAll();
 
         .close:hover,
         .close:focus {
-            color: black;
+            color: #fff;
             text-decoration: none;
         }
 
-        /* Ajuste para telas menores */
-        @media (max-width: 768px) {
-            table {
-                font-size: 0.9em;
-            }
-
-            th, td {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-        }
     </style>
 </head>
 <body>
@@ -211,41 +197,40 @@ $filmes = $filmeModel->findAll();
 
     <!-- Exibe mensagem de sucesso ou erro -->
     <?php if (isset($_SESSION['msg'])) { ?>
-        <div class="message"><?php echo $_SESSION['msg']; ?></div>
-        <?php unset($_SESSION['msg']); // Limpa a mensagem após exibir ?>
+        <div class="message <?php echo strpos($_SESSION['msg'], 'sucesso') !== false ? 'success' : 'error'; ?>">
+            <?php echo $_SESSION['msg']; ?>
+        </div>
+        <?php unset($_SESSION['msg']); ?>
     <?php } ?>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Ano</th>
-                <th>Descrição</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Percorre a lista de filmes e exibe cada um -->
-            <?php foreach ($filmes as $filme) { ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($filme->id, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($filme->titulo, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($filme->ano, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td>
-                        <!-- Formulário para excluir o filme -->
-                        <form action="listar.php" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este filme?');">
-                            <input type="hidden" name="excluir_id" value="<?php echo $filme->id; ?>">
-                            <button type="submit">Excluir</button>
-                        </form>
-                        <!-- Botão para abrir o modal de detalhes -->
-                        <button onclick="openModal('<?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?>')">Detalhes</button>
-                    </td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+    <!-- Container de filmes -->
+    <div class="movies-container">
+        <!-- Loop pelos filmes -->
+        <?php foreach ($filmes as $filme) { ?>
+            <div class="movie-card">
+                <img src="https://via.placeholder.com/200x300.png?text=<?php echo urlencode($filme->titulo); ?>" alt="<?php echo htmlspecialchars($filme->titulo, ENT_QUOTES, 'UTF-8'); ?>">
+                <h3><?php echo htmlspecialchars($filme->titulo, ENT_QUOTES, 'UTF-8'); ?></h3>
+                <p><?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?></p>
+                <p class="year"><?php echo htmlspecialchars($filme->ano, ENT_QUOTES, 'UTF-8'); ?></p>
+                <div>
+                    <!-- Formulário de exclusão do filme -->
+                    <form action="ExcluirFilme.php" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este filme?');">
+                        <input type="hidden" name="id" value="<?php echo $filme->id; ?>">
+                        <button type="submit" class="button">Excluir</button>
+                    </form>
+                    <!-- Botão de detalhes -->
+                    <button onclick="openModal('<?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?>')" class="button">Detalhes</button>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+
+    <!-- Botão para cadastrar novo filme -->
+    <div class="add-movie-btn">
+        <a href="cadastro.php">
+            <button>Cadastrar Novo Filme</button>
+        </a>
+    </div>
 
     <!-- Modal -->
     <div id="myModal" class="modal">
@@ -256,8 +241,9 @@ $filmes = $filmeModel->findAll();
         </div>
     </div>
 
+    <!-- Script do Modal -->
     <script>
-        // Função para abrir o modal e preencher a descrição do filme
+        // Função para abrir o modal de detalhes
         function openModal(descricao) {
             document.getElementById("descricaoFilme").innerText = descricao;
             document.getElementById("myModal").style.display = "block";

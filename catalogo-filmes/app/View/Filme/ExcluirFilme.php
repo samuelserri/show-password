@@ -1,16 +1,9 @@
 <?php
-// Inicia a sessão para exibir mensagens de sucesso ou erro
 session_start();
 
 // Verifica se o ID foi passado via POST
-if (isset($_POST['id'])) {
+if (isset($_POST['id']) && is_numeric($_POST['id'])) {
     $id = $_POST['id'];
-
-    // Verifica se o ID é válido
-    if (!is_numeric($id)) {
-        echo "ID inválido!";
-        exit;
-    }
 
     // Conexão com o banco de dados
     require __DIR__ . "\..\..\Config\Database.php";
@@ -31,17 +24,21 @@ if (isset($_POST['id'])) {
         if ($stmt->rowCount() > 0) {
             $_SESSION['msg'] = 'Filme excluído com sucesso!';
         } else {
-            $_SESSION['msg'] = 'Nenhum filme encontrado com o ID fornecido.';
+            $_SESSION['msg'] = 'Nenhum filme encontrado com o ID fornecido ou o filme já foi excluído.';
         }
 
     } catch (Exception $e) {
         $_SESSION['msg'] = 'Erro ao excluir filme: ' . $e->getMessage();
     }
 
-    // Redireciona para a lista de filmes após excluir
-    header("Location: ../index.php"); // Aqui subimos um nível e acessamos o index.php
+    // Redireciona para a lista de filmes após a exclusão
+    header("Location: listar.php"); // Aqui redireciona de volta para a lista de filmes
     exit;
 } else {
-    echo "ID não fornecido!";
+    $_SESSION['msg'] = "ID não fornecido ou inválido!";
+    header("Location: listar.php"); // Redireciona de volta para a lista de filmes
     exit;
 }
+?>
+
+
