@@ -19,10 +19,24 @@ $filme = $filmeModel->findById($id);
     <title>Filmes</title>
 </head>
 <body>
-    <h1>Filme</h1>
+<div class="card-visualizar">
+        <!-- Título do filme -->
+        <h1>Filme</h1>
 
-    <h3>Titulo: <?php echo $filme->titulo ?></h3>
-    <p>Ano: <?php echo $filme->ano ?></p>
-    <p>Descrição: <?php echo $filme->descricao ?></p>
+        <!-- Card da imagem do filme -->
+        <div class="card-image-container">
+            <img src="<?php echo $filme->imagem_url; ?>" alt="<?php echo $filme->titulo; ?>" class="card-image">
+        </div>
+
+        <!-- Informações do filme -->
+        <h3>Título: <?php echo $filme->titulo ?></h3>
+        <p>Ano: <?php echo $filme->ano ?></p>
+        <p>Descrição: <?php echo $filme->descricao ?></p>
+        
+        <!-- Botões com ícones e links -->
+        <a href="javascript:history.back()" class="btn voltar"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <button class="btn favoritar">Favoritar</button>
+       
+    </div>
 </body>
 </html>

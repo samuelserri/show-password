@@ -207,23 +207,32 @@ $filmes = $filmeModel->findAll();
     <div class="movies-container">
         <!-- Loop pelos filmes -->
         <?php foreach ($filmes as $filme) { ?>
-            <div class="movie-card">
-                <img src="https://via.placeholder.com/200x300.png?text=<?php echo urlencode($filme->titulo); ?>" alt="<?php echo htmlspecialchars($filme->titulo, ENT_QUOTES, 'UTF-8'); ?>">
-                <h3><?php echo htmlspecialchars($filme->titulo, ENT_QUOTES, 'UTF-8'); ?></h3>
-                <p><?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?></p>
-                <p class="year"><?php echo htmlspecialchars($filme->ano, ENT_QUOTES, 'UTF-8'); ?></p>
-                <div>
-                    <!-- Formulário de exclusão do filme -->
-                    <form action="ExcluirFilme.php" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este filme?');">
-                        <input type="hidden" name="id" value="<?php echo $filme->id; ?>">
-                        <button type="submit" class="button">Excluir</button>
-                    </form>
-                    <!-- Botão de detalhes -->
-                    <button onclick="openModal('<?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?>')" class="button">Detalhes</button>
-                </div>
-            </div>
-        <?php } ?>
+    <div class="movie-card">
+        <!-- Exibe a imagem do filme a partir da URL armazenada no banco de dados -->
+        <img src="<?php echo htmlspecialchars($filme->imagem, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($filme->titulo, ENT_QUOTES, 'UTF-8'); ?>">
+        
+        <!-- Exibe o título do filme -->
+        <h3><?php echo htmlspecialchars($filme->titulo, ENT_QUOTES, 'UTF-8'); ?></h3>
+
+        <!-- Exibe a descrição do filme -->
+        <p><?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?></p>
+
+        <!-- Exibe o ano do filme -->
+        <p class="year"><?php echo htmlspecialchars($filme->ano, ENT_QUOTES, 'UTF-8'); ?></p>
+
+        <div>
+            <!-- Formulário de exclusão do filme -->
+            <form action="ExcluirFilme.php" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este filme?');">
+                <input type="hidden" name="id" value="<?php echo $filme->id; ?>">
+                <button type="submit" class="button">Excluir</button>
+            </form>
+
+            <!-- Botão de detalhes -->
+            <button onclick="openModal('<?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?>')" class="button">Detalhes</button>
+        </div>
     </div>
+<?php } ?>
+
 
     <!-- Botão para cadastrar novo filme -->
     <div class="add-movie-btn">

@@ -13,16 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titulo = $_POST['titulo'];
     $descricao = $_POST['descricao'];
     $ano = $_POST['ano'];
+    $imagem = $_POST['imagem']; // Adiciona o link da imagem
 
     try {
         // Prepara a consulta SQL para inserir os dados no banco
-        $query = "INSERT INTO filme (titulo, descricao, ano) VALUES (:titulo, :descricao, :ano)";
+        $query = "INSERT INTO filme (titulo, descricao, ano, imagem) VALUES (:titulo, :descricao, :ano, :imagem)";
         $stmt = $conn->prepare($query);
 
         // Vincula os parâmetros
         $stmt->bindParam(':titulo', $titulo);
         $stmt->bindParam(':descricao', $descricao);
         $stmt->bindParam(':ano', $ano);
+        $stmt->bindParam(':imagem', $imagem); // Vincula o campo imagem
 
         // Executa a consulta
         if ($stmt->execute()) {
@@ -144,6 +146,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div>
                     <label for="ano">Ano</label>
                     <input type="number" name="ano" id="ano" placeholder="Ano do filme" required>
+                </div>
+
+                <!-- Campo para inserir o link da imagem -->
+                <div>
+                    <label for="imagem">Link da Imagem</label>
+                    <input type="text" name="imagem" id="imagem" placeholder="Informe o link da imagem" required>
                 </div>
             </div>   
 
