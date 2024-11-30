@@ -227,6 +227,15 @@ $filmes = $filmeModel->findAll();
                 <button type="submit" class="button">Excluir</button>
             </form>
 
+             <!-- Formulário de edição do filme -->
+             <form action="editar.php" method="GET" onsubmit="return confirm('Tem certeza que deseja editar este filme?');">
+    <input type="hidden" name="id" value="<?php echo $filme->id; ?>">
+    <button type="submit" class="button">Editar</button>
+</form>
+
+
+
+
             <!-- Botão de detalhes -->
             <button onclick="openModal('<?php echo htmlspecialchars($filme->descricao, ENT_QUOTES, 'UTF-8'); ?>')" class="button">Detalhes</button>
         </div>
